@@ -1,8 +1,9 @@
+//Front end implementation of the Hangman Game
 public class HangmanGameFrontEnd implements HangmanGameFrontEndObserver {
-    private final HangmanGameLogic gameLogic;
+    private final HangmanGameBackEnd gameLogic;
 
     public HangmanGameFrontEnd(String dictionaryFileName) {
-        gameLogic = new HangmanGameLogic(this, dictionaryFileName);
+        gameLogic = new HangmanGameBackEnd(this, dictionaryFileName);
 
         // Print out welcome message...
         System.out.println("Welcome to Hangman!");

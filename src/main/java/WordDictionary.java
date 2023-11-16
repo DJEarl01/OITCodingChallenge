@@ -8,7 +8,6 @@ public class WordDictionary {
 
     public WordDictionary(String wordListFileName) {
         wordList = new ArrayList<>();
-
         readWordsFromFile(wordListFileName);
     }
 
@@ -23,13 +22,8 @@ public class WordDictionary {
                     wordList.add(line);
                 }
             } while (line != null);
-
-//            System.out.println("DEBUG: WordList Read! Printing list...");
-//            System.out.println(wordList.toString());
-
         } catch (IOException e) {
             System.out.println("FileReader got an error: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 

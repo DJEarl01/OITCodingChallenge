@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.Scanner;
 
 public class MainRunner {
@@ -12,7 +11,6 @@ public class MainRunner {
             filePath = "WordList.txt";
         }
 
-
         // Initialize dependencies
         HangmanGameFrontEnd game = new HangmanGameFrontEnd(filePath);
         terminalInput = new Scanner(System.in);
@@ -24,7 +22,7 @@ public class MainRunner {
             String inputGuesses = terminalInput.next();
             tryToClearTerminal();
 
-            // Run a play for each guess typed into the terminal
+            // Run a play for each guess character typed into the terminal
             for (int i = 0; i < inputGuesses.length(); i++) {
                 gameIsOver = game.makePlay(inputGuesses.charAt(i));
 

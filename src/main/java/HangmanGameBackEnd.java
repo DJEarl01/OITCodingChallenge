@@ -1,18 +1,19 @@
 import java.util.ArrayList;
 
-public class HangmanGameLogic {
-    private final WordDictionary dictionary;
+//Logic class that handles the back end logic of the game.
+public class HangmanGameBackEnd {
     private final String pickedWord;
-    private ArrayList<Character> guessedLetters;
-    private ArrayList<Character> printedWordAfterGuesses;
+    private final ArrayList<Character> guessedLetters;
+    private final ArrayList<Character> printedWordAfterGuesses;
+    private final HangmanGameFrontEndObserver observer;
     private int correctGuessCount;
-    private HangmanGameFrontEndObserver observer;
 
-    public HangmanGameLogic(HangmanGameFrontEndObserver observer, String dictionaryFileName) {
+    public HangmanGameBackEnd(HangmanGameFrontEndObserver observer, String dictionaryFileName) {
+        WordDictionary dictionary = new WordDictionary(dictionaryFileName);
+
+        pickedWord = dictionary.getRandomWord();
         this.observer = observer;
         correctGuessCount = 0;
-        dictionary = new WordDictionary(dictionaryFileName);
-        pickedWord = dictionary.getRandomWord();
         printedWordAfterGuesses = new ArrayList<>();
         guessedLetters = new ArrayList<>();
 
@@ -22,13 +23,12 @@ public class HangmanGameLogic {
         }
     }
 
-    // Main play logic function
     public boolean makePlayLogic(Character guess) {
         guess = Character.toUpperCase(guess);
 
         if (guessedLetters.contains(guess)) {
+            // We've guessed this already.
             observer.printGuessAlreadyMade(guess);
-            // Ignore the play and return.
             return false;
         } else {
             guessedLetters.add(guess);
@@ -37,8 +37,8 @@ public class HangmanGameLogic {
                 // We have a correct guess!!
                 updatePrintedWordAfterGuesses(guess);
                 correctGuessCount++;
-
                 observer.printCorrectGuess(guess);
+
                 // Check if we are done!
                 return checkIfGameOver();
             } else {
@@ -61,10 +61,11 @@ public class HangmanGameLogic {
 
     private boolean checkIfGameOver() {
         boolean hasUnderscoreStill = false;
-        for (int i = 0; i < printedWordAfterGuesses.size(); i++) {
-            if (Character.compare(printedWordAfterGuesses.get(i), '_') == 0) {
+        for (Character targetCharacter : printedWordAfterGuesses) {
+            if (targetCharacter == '_') {
                 // We found an underscore in the array
                 hasUnderscoreStill = true;
+                break;
             }
         }
 
@@ -85,17 +86,17 @@ public class HangmanGameLogic {
 
     public String getWordSoFar() {
         StringBuilder outputGuessedWord = new StringBuilder();
-        for (int i = 0; i < printedWordAfterGuesses.size(); i++) {
-            outputGuessedWord.append(printedWordAfterGuesses.get(i));
+        for (Character targetCharacter : printedWordAfterGuesses) {
+            outputGuessedWord.append(targetCharacter);
         }
         return outputGuessedWord.toString();
     }
 
     public String getBadGuessedLetters() {
         StringBuilder outputGuessedLettersString = new StringBuilder();
-        for (int i = 0; i < guessedLetters.size(); i++) {
-            if (!isLetterInPickedWord(guessedLetters.get(i))) {
-                outputGuessedLettersString.append(guessedLetters.get(i));
+        for (Character guessedLetter : guessedLetters) {
+            if (!isLetterInPickedWord(guessedLetter)) {
+                outputGuessedLettersString.append(guessedLetter);
                 outputGuessedLettersString.append(" ");
             }
         }
@@ -121,5 +122,4 @@ public class HangmanGameLogic {
     public int getPickedWordLength() {
         return pickedWord.length();
     }
-
 }
